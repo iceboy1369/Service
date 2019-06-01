@@ -3,18 +3,17 @@ package ir.sana24.miningservice;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,32 +37,38 @@ public class SendEvents {
 
         private InputStream is = null;
         private String url;
-        String page_output, message;
+        String page_output, message, src_str, events;
         Integer result = 1;
 
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            url = "http://saynaair.ir/movahedian/chatroom/sendMessage.php";
+            src_str = "http://localhost:8009/Events/Sana_Plus/admin_21/fPHQIhAxbaFspOBF5iXMLt0WGjT3xmen/INMLUH/events.js/";
+            events = "{Clicks:[{'A':'id_a'},{'P':'id_P'}],dbclicks: [{'P':'id_P2'}]}";
+            url = "http://localhost:8009/Events/reloads/?json_format="+events+"&src_str="+ src_str;
         }
 
         @Override
         protected Integer doInBackground(Integer... args) {
             try {
                 // Building Parameters
-                List<NameValuePair> nameValuePairs = new ArrayList<>(5);
-                nameValuePairs.add(new BasicNameValuePair("title","new message"));
-                nameValuePairs.add(new BasicNameValuePair("message",description));
-                nameValuePairs.add(new BasicNameValuePair("id","18"));
-                nameValuePairs.add(new BasicNameValuePair("to","11"));
-                nameValuePairs.add(new BasicNameValuePair("conversation_id","14"));
-                // sending params and wait for result and get the result
+//                List<NameValuePair> nameValuePairs = new ArrayList<>(5);
+//                nameValuePairs.add(new BasicNameValuePair("title","new message"));
+//                nameValuePairs.add(new BasicNameValuePair("message",description));
+//                nameValuePairs.add(new BasicNameValuePair("id","18"));
+//                nameValuePairs.add(new BasicNameValuePair("to","11"));
+//                nameValuePairs.add(new BasicNameValuePair("conversation_id","14"));
+//                DefaultHttpClient httpClient = new DefaultHttpClient();
+//                HttpPost httpPost = new HttpPost(url);
+//                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+//                HttpResponse httpResponse = httpClient.execute(httpPost);
+
                 DefaultHttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(url);
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
-                HttpResponse httpResponse = httpClient.execute(httpPost);
+                HttpGet httpget = new HttpGet(url);
+                HttpResponse httpResponse = httpClient.execute(httpget);
                 HttpEntity httpEntity = httpResponse.getEntity();
+
                 is = httpEntity.getContent();
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
